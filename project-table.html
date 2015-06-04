@@ -1,14 +1,96 @@
 <head>
   <title>project-table</title>
-</head>
+<!--   <link rel="stylesheet" type="text/css" href="/semantic_ui.css">
+ --></head>
 
-<body>
-  <h1>Welcome to Meteor!</h1>
-
-  {{> hello}}
+<body id="home">
+  
 </body>
 
-<template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
+
+<template name="addStudent">
+  <!-- <button class="ui button">Add Student</button> -->
+  	 <div class="ui fixed pointing menu">
+  <a class="active item" href="/addStudent">
+    <i class="add user icon"></i> Add Student
+  </a>
+  <a class="item" href="/listStudent">
+    <i class="list icon"></i> List Student
+  </a>
+</div>
+	<div class="container">
+		<div class="ui stacked segment">
+			<form action="" class="ui form">
+				<h4 class="ui center dividing header">Student Information</h4>
+
+				 <div class="field">
+			      	<label>Name:</label>
+		          	<input id="full-name" type="text" name="full-name" placeholder="Eg: John Smith" required autofocus>
+			      </div>
+				 <div class="field">
+			      	<label>Phone Number:</label>
+		          	<input id="phone" type="text" name="phone" placeholder="Eg: 9876543210" required>
+			      </div>
+				 <div class="field">
+			      	<label>Class:</label>
+		          	<input id="class" type="text" name="class" placeholder="Eg: B.Tech" required>
+			      </div>
+				 <div class="field">
+			      	<label>City:</label>
+		          	<input id="city" type="text" name="city" placeholder="Eg: Mumbai" required>
+			      </div>
+
+				<div class="ui primary button">
+				  Save
+				</div>
+			</form>
+		</div>
+	</div>
+
+</template>
+
+
+<template name="listStudent">
+  <!-- <button class="ui button">List Student</button> -->
+  <div class="ui fixed pointing menu">
+  <a class="item" href="/addStudent">
+    <i class="add user icon"></i> Add Student
+  </a>
+  <a class="active blue item" href="/listStudent">
+    <i class="list icon"></i> List Student
+  </a>
+</div>
+
+
+  <div class="con_table">
+  
+  	<table class="ui inverted blue table">
+  	<thead>
+  	  <tr>
+  	    <th>Name <i class="chevron circle name up icon"></i><i class="chevron circle name down icon"></i></th>
+  	    <th>Phone Number</th>
+  	    <th>Class</th>
+  	    <th>City</th>
+  	  </tr>
+  	</thead>
+  	<tbody>
+  	{{#each result}}
+  	  <tr>
+  	    <td>{{name}}</td>
+  	    <td>{{phone}}</td>
+  	    <td>{{class}}</td>
+  	    <td>{{city}}</td>
+  	  </tr>
+  	    	{{/each}}
+  	</tbody>
+  	<tfoot>
+  	  <tr><th>Total entries</th>
+  	  <th>{{counter}}</th>
+  	  <th></th>
+  	  <th></th>
+  	</tr></tfoot>
+  	</table>
+
+  </div>
+
 </template>
