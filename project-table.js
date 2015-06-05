@@ -1,8 +1,12 @@
 Students = new Mongo.Collection('student');
 
 if (Meteor.isClient) {
-
 Meteor.subscribe('student');
+Session.set('filter', {});
+Tracker.autorun(function () {
+  myId = Meteor.subscribe('adder', Session.get('filter'));
+  console.log(myId);
+});
 
 Router.route('/', function(){
   window.location.replace('/addStudent');
@@ -97,5 +101,9 @@ Students.insert({
 if (Meteor.isServer) {
   Meteor.publish('student', function () {
     return Students.find();
+  });
+
+  Meteor.publish('adder', function (filter) {
+    return Students.find(filter || {});
   });
 }
