@@ -2,6 +2,12 @@ Students = new Mongo.Collection('student');
 
 if (Meteor.isClient) {
 
+Meteor.subscribe('student');
+
+Router.route('/', function(){
+  window.location.replace('/addStudent');
+});
+
 Router.route('/addStudent', function(){
   this.render('addStudent');
 });
@@ -20,22 +26,12 @@ Router.route('/listStudent', function(){
       d.city = document.getElementById('city').value;
       console.log(JSON.stringify(d));
 
-       Students.insert({
-        name: d.name,
-        phone: d.phone,
-        class: d.class,
-        city: d.city,
-        createdAt: new Date()
-      }, function(error){
+      Meteor.call('addTask', d, function (error, result) {
         if(error)
           console.log(error);
-        else{
-        console.log("Success");
-        window.location.replace('/listStudent');
-      }
-      });  
-
-
+        else
+          console.log(result);
+      });
     }
   });
 
@@ -43,9 +39,9 @@ Router.route('/listStudent', function(){
 Template.listStudent.helpers({
   result: function () {
     var sorter = Session.get('sorter');
-    console.log(sorter)
+    console.log(sorter);
 
-      if(sorter == undefined)
+      if(sorter === undefined)
         return Students.find();
 
       if(sorter == 'name-down'){
@@ -72,8 +68,31 @@ Template.listStudent.events({
 
 }
 
-// if (Meteor.isServer) {
-//   Meteor.startup(function () {
-//     // code to run on server at startup
-//   });
-// }
+
+
+Meteor.methods({
+  addTask: function(d){
+Students.insert({
+        name: d.name,
+        phone: d.phone,
+        class: d.class,
+        city: d.city,
+        createdAt: new Date()
+      }, function(error){
+        if(error)
+          console.log(error);
+        else{
+        console.log("Success");
+        window.location.replace('/listStudent');
+      }
+      });  
+  }
+
+});
+
+
+if (Meteor.isServer) {
+  Meteor.publish('student', function () {
+    return Students.find();
+  });
+}
