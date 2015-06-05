@@ -83,7 +83,10 @@ Students.insert({
           console.log(error);
         else{
         console.log("Success");
+        document.querySelector('.button').innerHTML = "Success";
+        setTimeout(function(){
         window.location.replace('/listStudent');
+        },300);
       }
       });  
   }
