@@ -1,14 +1,6 @@
 Students = new Mongo.Collection('student');
 
 if (Meteor.isClient) {
-Meteor.subscribe('student');
-
-// Session.set('filter', {});
-// Tracker.autorun(function () {
-//   myId = Meteor.subscribe('adder', Session.get('filter'));
-//   console.log(myId);
-// });
-
 Router.route('/', function(){
   window.location.replace('/addStudent');
 });
@@ -19,6 +11,15 @@ Router.route('/addStudent', function(){
 Router.route('/listStudent', function(){
   this.render('listStudent');
 });
+Meteor.subscribe('student');
+
+myPubs = Meteor.subscribe('myPub');
+console.log(myPubs)
+// // Tracker.autorun(function () {
+// //   myId = Meteor.subscribe('adder', Session.get('fresh'));
+// //   console.log(myId.name);
+// // });
+
   
   
   Template.addStudent.events({
@@ -104,7 +105,30 @@ if (Meteor.isServer) {
     return Students.find();
   });
 
-  // Meteor.publish('adder', function (filter) {
-  //   return Students.find(filter || {});
+
+  // Meteor.publish('adder', function () {
+  //   return Students.find().observeChanges({
+  //     added: function (id, fields) {
+  //       return Session.set('fresh', fields);
+  //     }
+  //   });
   // });
+
+  Meteor.publish('myPub', function() {
+  var self = this;
+  var initializing = true;
+
+  var handle = Students.find().observeChanges({
+    added: function (id, fields) {
+      if (!initializing)
+        self.added("student", id, fields);
+    }
+  });
+  initializing = false;
+  self.ready();
+
+  self.onStop(function () {
+    handle.stop();  // v. important to stop the observer when the subscription is stopped to avoid it running forever!
+  });
+});
 }
