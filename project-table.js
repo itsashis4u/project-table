@@ -12,15 +12,8 @@ Router.route('/listStudent', function(){
   this.render('listStudent');
 });
 Meteor.subscribe('student');
-
-myPubs = Meteor.subscribe('myPub');
-console.log(myPubs)
-// // Tracker.autorun(function () {
-// //   myId = Meteor.subscribe('adder', Session.get('fresh'));
-// //   console.log(myId.name);
-// // });
-
-  
+var notifs =  Session.get('notifs');
+ console.log(notifs);
   
   Template.addStudent.events({
     'click .button': function (event) {
@@ -105,30 +98,7 @@ if (Meteor.isServer) {
     return Students.find();
   });
 
-
-  // Meteor.publish('adder', function () {
-  //   return Students.find().observeChanges({
-  //     added: function (id, fields) {
-  //       return Session.set('fresh', fields);
-  //     }
-  //   });
-  // });
-
-  Meteor.publish('myPub', function() {
-  var self = this;
-  var initializing = true;
-
-  var handle = Students.find().observeChanges({
-    added: function (id, fields) {
-      if (!initializing)
-        self.added("student", id, fields);
-    }
+  Students.after.insert(function(userId, doc){
+    Session.set('notifs', "New file inserted: "+userId);
   });
-  initializing = false;
-  self.ready();
-
-  self.onStop(function () {
-    handle.stop();  // v. important to stop the observer when the subscription is stopped to avoid it running forever!
-  });
-});
 }

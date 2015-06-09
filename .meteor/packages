@@ -8,3 +8,4 @@ meteor-platform
 semantic:ui
 flemay:less-autoprefixer
 iron:router
+matb33:collection-hooks
